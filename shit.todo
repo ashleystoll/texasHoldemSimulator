@@ -1,0 +1,13 @@
+✔ Make sure you don't have to refresh page @done(2017-02-02 10:10)
+✔ Show counter in UI @done(2017-02-02 10:26)
+✔ Remove player @done(2017-02-02 10:42)
+✔ Different types of starting hands (pocket pairs, suited connectors etc.) @done(2017-02-03 14:17)
+  ✔ Specs @done(2017-02-03 14:17)
+  ✔ Add iffys to other specs @done(2017-02-03 14:17)
+✔ double belly buster vs. open ended @done(2017-02-03 15:05)
+✔ handAnalyzer for handFromHoleCards @done(2017-02-03 15:45)
+☐ middle/bottom pair
+☐ two overcards
+☐ pair with kicker
+☐ display distribution of all results (pair, two pair...)
+☐ Figure out "and" (ie. a pair AND a flush draw)
