@@ -331,66 +331,73 @@
 
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title">Hands from hole cards to eval against:</h3>
-          </div>
-
-          <div class="panel-body">
-            <div ng-repeat="handToEvalAgainst in vm.handPossibilities">
-              <label ng-if="handToEvalAgainst !== 'pair'">
-                {{ handToEvalAgainst }}
-                <input type="checkbox" ng-model="vm.handsFromHoleCardsToEvalAgainst[handToEvalAgainst]" ng-change="vm.updatePairsFromHoleCardsToEvalAgainst()">
-              </label>
-
-              <label ng-if="handToEvalAgainst === 'pair'">
-                {{ handToEvalAgainst }}
-                <small>
-                  (toggle all: <input type="checkbox" ng-model="vm.evalAgainstAllPairsFromHoleCards" ng-change="vm.togglePairTypesHoleCards()">)
-                </small>
-              </label>
-
-              <ul ng-repeat="pairType in vm.pairTypes" ng-if="handToEvalAgainst === 'pair'">
-                <li>
-                  <label>
-                    {{ pairType }}
-                    <input type="checkbox" ng-model="vm.pairsFromHoleCardsToEvalAgainst[pairType]">
-                  </label>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
             <h3 class="panel-title">Hands to eval against:</h3>
           </div>
 
           <div class="panel-body">
-            <div ng-repeat="handToEvalAgainst in vm.handPossibilities">
-              <label ng-if="handToEvalAgainst !== 'pair'">
-                {{ handToEvalAgainst }}
-                <input type="checkbox" ng-model="vm.handsToEvalAgainst[handToEvalAgainst]" ng-change="vm.updatePairsToEvalAgainst()">
+            <div>
+              <label>
+                From hole cards:
+                <input type="checkbox" ng-model="vm.fromHoleCards">
               </label>
-
-              <label ng-if="handToEvalAgainst === 'pair'">
-                {{ handToEvalAgainst }}
-                <small>
-                  (toggle all: <input type="checkbox" ng-model="vm.evalAgainstAllPairs" ng-change="vm.togglePairTypes()">)
-                </small>
-              </label>
-
-              <ul ng-repeat="pairType in vm.pairTypes" ng-if="handToEvalAgainst === 'pair'">
-                <li>
-                  <label>
-                    {{ pairType }}
-                    <input type="checkbox" ng-model="vm.pairsToEvalAgainst[pairType]">
-                  </label>
-                </li>
-              </ul>
             </div>
+
+            <hr>
+
+            <div ng-show="vm.fromHoleCards">
+              from hole cards
+              <div ng-repeat="handToEvalAgainst in vm.handPossibilities">
+                <label ng-if="handToEvalAgainst !== 'pair'">
+                  {{ handToEvalAgainst }}
+                  <input type="checkbox" ng-model="vm.handsFromHoleCardsToEvalAgainst[handToEvalAgainst]" ng-change="vm.updatePairsFromHoleCardsToEvalAgainst()">
+                </label>
+
+                <label ng-if="handToEvalAgainst === 'pair'">
+                  {{ handToEvalAgainst }}
+                  <small>
+                    (toggle all: <input type="checkbox" ng-model="vm.evalAgainstAllPairsFromHoleCards" ng-change="vm.togglePairTypesHoleCards()">)
+                  </small>
+                </label>
+
+                <ul ng-repeat="pairType in vm.pairTypes" ng-if="handToEvalAgainst === 'pair'">
+                  <li>
+                    <label>
+                      {{ pairType }}
+                      <input type="checkbox" ng-model="vm.pairsFromHoleCardsToEvalAgainst[pairType]">
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div ng-show="!vm.fromHoleCards">
+              not from hole cards
+              <div ng-repeat="handToEvalAgainst in vm.handPossibilities">
+                <label ng-if="handToEvalAgainst !== 'pair'">
+                  {{ handToEvalAgainst }}
+                  <input type="checkbox" ng-model="vm.handsToEvalAgainst[handToEvalAgainst]" ng-change="vm.updatePairsToEvalAgainst()">
+                </label>
+
+                <label ng-if="handToEvalAgainst === 'pair'">
+                  {{ handToEvalAgainst }}
+                  <small>
+                    (toggle all: <input type="checkbox" ng-model="vm.evalAgainstAllPairs" ng-change="vm.togglePairTypes()">)
+                  </small>
+                </label>
+
+                <ul ng-repeat="pairType in vm.pairTypes" ng-if="handToEvalAgainst === 'pair'">
+                  <li>
+                    <label>
+                      {{ pairType }}
+                      <input type="checkbox" ng-model="vm.pairsToEvalAgainst[pairType]">
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
           </div>
         </div>
-
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">Draws to eval against:</h3>

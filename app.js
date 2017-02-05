@@ -55,6 +55,7 @@ function MainCtrl() {
   vm.dealTo = 'river';
   vm.usesStartingHandTiers = false;
   vm.numberOfSimulations = 10000;
+  vm.fromHoleCards = true;
   vm.handPossibilities = [
     'pair',
     'two pair',
@@ -298,53 +299,57 @@ function MainCtrl() {
     hand = handAnalyzer.bestHand(players[0], boardCards).hand;
     draw = handAnalyzer.draw(players[0], boardCards);
 
-    for (var handFromHoleCardsToEvalAgainst in vm.handsFromHoleCardsToEvalAgainst) {
-      // if we're supposed to compare against it (pair, two pair, trips...)
-      if (vm.handsFromHoleCardsToEvalAgainst.hasOwnProperty(handFromHoleCardsToEvalAgainst) && vm.handsFromHoleCardsToEvalAgainst[handFromHoleCardsToEvalAgainst]) {
+    if (vm.fromHoleCards) {
+      for (var handFromHoleCardsToEvalAgainst in vm.handsFromHoleCardsToEvalAgainst) {
+        // if we're supposed to compare against it (pair, two pair, trips...)
+        if (vm.handsFromHoleCardsToEvalAgainst.hasOwnProperty(handFromHoleCardsToEvalAgainst) && vm.handsFromHoleCardsToEvalAgainst[handFromHoleCardsToEvalAgainst]) {
 
-        if (handFromHoleCardsToEvalAgainst === 'pair') {
-          if (handAnalyzer.handFromHoleCards('pair', players[0], boardCards)) { // if there's a pair
-            for (var pairType in vm.pairsFromHoleCardsToEvalAgainst) {
-              if (vm.pairsFromHoleCardsToEvalAgainst.hasOwnProperty(pairType) && vm.pairsFromHoleCardsToEvalAgainst[pairType]) { // if we're supposed to compare against it
-                if (handAnalyzer.bestHand(players[0], boardCards).pairType === pairType) {
-                  return true;
+          if (handFromHoleCardsToEvalAgainst === 'pair') {
+            if (handAnalyzer.handFromHoleCards('pair', players[0], boardCards)) { // if there's a pair
+              for (var pairType in vm.pairsFromHoleCardsToEvalAgainst) {
+                if (vm.pairsFromHoleCardsToEvalAgainst.hasOwnProperty(pairType) && vm.pairsFromHoleCardsToEvalAgainst[pairType]) { // if we're supposed to compare against it
+                  if (handAnalyzer.bestHand(players[0], boardCards).pairType === pairType) {
+                    return true;
+                  }
                 }
               }
             }
           }
-        }
 
-        else if (handFromHoleCardsToEvalAgainst !== 'pair') {
-          if (handAnalyzer.handFromHoleCards(handFromHoleCardsToEvalAgainst, players[0], boardCards)) {
-            return true;
+          else if (handFromHoleCardsToEvalAgainst !== 'pair') {
+            if (handAnalyzer.handFromHoleCards(handFromHoleCardsToEvalAgainst, players[0], boardCards)) {
+              return true;
+            }
           }
-        }
 
+        }
       }
     }
 
-    for (var handToEvalAgainst in vm.handsToEvalAgainst) {
-      // if we're supposed to compare against it (pair, two pair, trips...)
-      if (vm.handsToEvalAgainst.hasOwnProperty(handToEvalAgainst) && vm.handsToEvalAgainst[handToEvalAgainst]) {
-        if (handToEvalAgainst === 'pair') {
-          if (hand === 'pair') {
-            for (var pairType2 in vm.pairsToEvalAgainst) {
-              if (vm.pairsToEvalAgainst.hasOwnProperty(pairType2) && vm.pairsToEvalAgainst[pairType2]) { // if we're supposed to compare against it
-                if (handAnalyzer.bestHand(players[0], boardCards).pairType === pairType2) {
-                  return true;
+    else if (!vm.fromHoleCards) {
+      for (var handToEvalAgainst in vm.handsToEvalAgainst) {
+        // if we're supposed to compare against it (pair, two pair, trips...)
+        if (vm.handsToEvalAgainst.hasOwnProperty(handToEvalAgainst) && vm.handsToEvalAgainst[handToEvalAgainst]) {
+          if (handToEvalAgainst === 'pair') {
+            if (hand === 'pair') {
+              for (var pairType2 in vm.pairsToEvalAgainst) {
+                if (vm.pairsToEvalAgainst.hasOwnProperty(pairType2) && vm.pairsToEvalAgainst[pairType2]) { // if we're supposed to compare against it
+                  if (handAnalyzer.bestHand(players[0], boardCards).pairType === pairType2) {
+                    return true;
+                  }
                 }
               }
             }
           }
-        }
 
 
-        else if (handToEvalAgainst !== 'pair') {
-          if (hand === handToEvalAgainst) {
-            return true;
+          else if (handToEvalAgainst !== 'pair') {
+            if (hand === handToEvalAgainst) {
+              return true;
+            }
           }
-        }
 
+        }
       }
     }
 
