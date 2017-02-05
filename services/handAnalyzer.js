@@ -67,12 +67,12 @@ var handAnalyzer = (function () {
       return twoPair;
     }
 
-    pair = _pair(rankCount);
+    pair = _pair(rankCount, boardCards);
     if (pair) {
       return pair;
     }
 
-    return _nothing(playerCards, boardCards);
+    return _nothing(rankCount);
   }
 
   function _royalFlush(playerCards, boardCards) {
@@ -468,7 +468,7 @@ var handAnalyzer = (function () {
     return false;
   }
 
-  function _pair(rankCount) {
+  function _pair(rankCount, boardCards) {
     for (var rank in rankCount) {
       if (rankCount.hasOwnProperty(rank)) {
         if (rankCount[rank] === 2) {
@@ -477,6 +477,7 @@ var handAnalyzer = (function () {
             handRank: 1,
             rank: rank,
             kickers: utilities.getKickers(rankCount, 'pair'),
+            pairType: utilities.getPairType(rank, boardCards),
           };
         }
       }
@@ -485,7 +486,7 @@ var handAnalyzer = (function () {
     return false;
   }
 
-  function _nothing() {
+  function _nothing(rankCount) {
     return {
       hand: 'high card',
       handRank: 0,

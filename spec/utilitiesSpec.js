@@ -837,4 +837,116 @@ describe('utilities', function () {
       });
     });
   });
+
+  describe('getPairType', function () {
+    describe('river', function () {
+      var boardCards;
+
+      beforeEach(function () {
+        boardCards = [
+          new Card('3', 'h'),
+          new Card('5', 's'),
+          new Card('7', 'c'),
+          new Card('9', 'd'),
+          new Card('j', 's'),
+        ];
+      });
+
+      it('overpair', function () {
+        expect(utilities.getPairType('q', boardCards)).toBe('overpair');
+      });
+
+      it('top pair', function () {
+        expect(utilities.getPairType('j', boardCards)).toBe('top pair');
+      });
+
+      it('second pair+', function () {
+        expect(utilities.getPairType('10', boardCards)).toBe('second pair+');
+      });
+
+      it('second pair', function () {
+        expect(utilities.getPairType('9', boardCards)).toBe('second pair');
+      });
+
+      it('third pair+', function () {
+        expect(utilities.getPairType('8', boardCards)).toBe('third pair+');
+      });
+
+      it('third pair', function () {
+        expect(utilities.getPairType('7', boardCards)).toBe('third pair');
+      });
+
+      it('fourth pair+', function () {
+        expect(utilities.getPairType('6', boardCards)).toBe('fourth pair+');
+      });
+
+      it('fourth pair', function () {
+        expect(utilities.getPairType('5', boardCards)).toBe('fourth pair');
+      });
+
+      it('fifth pair+', function () {
+        expect(utilities.getPairType('4', boardCards)).toBe('fifth pair+');
+      });
+
+      it('fifth pair', function () {
+        expect(utilities.getPairType('3', boardCards)).toBe('fifth pair');
+      });
+
+      it('under pair', function () {
+        expect(utilities.getPairType('2', boardCards)).toBe('underpair');
+      });
+
+      it('board pair', function () {
+        var boardCards = [
+          new Card('7', 'c'),
+          new Card('7', 's'),
+          new Card('k', 'd'),
+          new Card('8', 'd'),
+          new Card('3', 'd'),
+        ];
+
+        expect(utilities.getPairType('6', boardCards)).toBe('third pair+');
+      });
+    });
+
+    describe('flop', function () {
+      var boardCards;
+
+      beforeEach(function () {
+        boardCards = [
+          new Card('7', 'c'),
+          new Card('9', 'd'),
+          new Card('j', 's'),
+        ];
+      });
+
+      it('overpair', function () {
+        expect(utilities.getPairType('q', boardCards)).toBe('overpair');
+      });
+
+      it('top pair', function () {
+        expect(utilities.getPairType('j', boardCards)).toBe('top pair');
+      });
+
+      it('second pair+', function () {
+        expect(utilities.getPairType('10', boardCards)).toBe('second pair+');
+      });
+
+      it('second pair', function () {
+        expect(utilities.getPairType('9', boardCards)).toBe('second pair');
+      });
+
+      it('third pair+', function () {
+        expect(utilities.getPairType('8', boardCards)).toBe('third pair+');
+      });
+
+      it('third pair', function () {
+        expect(utilities.getPairType('7', boardCards)).toBe('third pair');
+      });
+
+      it('underpair', function () {
+        expect(utilities.getPairType('6', boardCards)).toBe('underpair');
+      });
+    });
+  });
 });

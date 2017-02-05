@@ -758,6 +758,7 @@ describe('handAnalyzer', function () {
             handRank: 1,
             rank: 'a',
             kickers: ['k', 'q', '8'],
+            pairType: 'overpair',
           });
 
           expect(handAnalyzer.bestHand(pair.fromOneHoleCard.playerCards, pair.fromOneHoleCard.boardCards)).toEqual({
@@ -765,6 +766,7 @@ describe('handAnalyzer', function () {
             handRank: 1,
             rank: 'a',
             kickers: ['k', 'q', '8'],
+            pairType: 'top pair',
           });
 
           expect(handAnalyzer.bestHand(pair.fromBoard.playerCards, pair.fromBoard.boardCards)).toEqual({
@@ -772,11 +774,12 @@ describe('handAnalyzer', function () {
             handRank: 1,
             rank: '7',
             kickers: ['a', 'k', 'q'],
+            pairType: 'underpair',
           });
         });
 
         it('don\'t got it', function () {
-          // expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('trips');
+          expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('trips');
 
           expect(handAnalyzer.bestHand(pair.andStraight.playerCards, pair.andStraight.boardCards).hand).not.toBe('pair');
           expect(handAnalyzer.bestHand(pair.andFlush.playerCards, pair.andFlush.boardCards).hand).not.toBe('pair');
@@ -867,7 +870,7 @@ describe('handAnalyzer', function () {
         });
 
         it('don\'t got it', function () {
-          // expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('trips');
+          expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('trips');
 
           expect(handAnalyzer.bestHand(pair.fromPocketPair.playerCards, pair.fromPocketPair.boardCards).hand).not.toBe('two pair');
           expect(handAnalyzer.bestHand(pair.fromOneHoleCard.playerCards, pair.fromOneHoleCard.boardCards).hand).not.toBe('two pair');
@@ -945,7 +948,7 @@ describe('handAnalyzer', function () {
         });
 
         it('don\'t got it', function () {
-          // expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('trips');
+          expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('trips');
 
           expect(handAnalyzer.bestHand(pair.fromPocketPair.playerCards, pair.fromPocketPair.boardCards).hand).not.toBe('trips');
           expect(handAnalyzer.bestHand(pair.fromOneHoleCard.playerCards, pair.fromOneHoleCard.boardCards).hand).not.toBe('trips');
@@ -1105,7 +1108,7 @@ describe('handAnalyzer', function () {
         });
 
         it('don\'t got it', function () {
-          // expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('straight');
+          expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('straight');
 
           expect(handAnalyzer.bestHand(pair.fromPocketPair.playerCards, pair.fromPocketPair.boardCards).hand).not.toBe('straight');
           expect(handAnalyzer.bestHand(pair.fromOneHoleCard.playerCards, pair.fromOneHoleCard.boardCards).hand).not.toBe('straight');
@@ -1207,7 +1210,7 @@ describe('handAnalyzer', function () {
         });
 
         it('don\'t got it', function () {
-          // expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('flush');
+          expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('flush');
 
           expect(handAnalyzer.bestHand(pair.fromPocketPair.playerCards, pair.fromPocketPair.boardCards).hand).not.toBe('flush');
           expect(handAnalyzer.bestHand(pair.fromOneHoleCard.playerCards, pair.fromOneHoleCard.boardCards).hand).not.toBe('flush');
@@ -1318,7 +1321,7 @@ describe('handAnalyzer', function () {
         });
 
         it('don\'t got it', function () {
-          // expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('full house');
+          expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('full house');
 
           expect(handAnalyzer.bestHand(pair.fromPocketPair.playerCards, pair.fromPocketPair.boardCards).hand).not.toBe('full house');
           expect(handAnalyzer.bestHand(pair.fromOneHoleCard.playerCards, pair.fromOneHoleCard.boardCards).hand).not.toBe('full house');
@@ -1399,7 +1402,7 @@ describe('handAnalyzer', function () {
         });
 
         it('don\'t got it', function () {
-          // expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('quads');
+          expect(handAnalyzer.bestHand(nothing.playerCards, nothing.boardCards).hand).not.toBe('quads');
 
           expect(handAnalyzer.bestHand(pair.fromPocketPair.playerCards, pair.fromPocketPair.boardCards).hand).not.toBe('quads');
           expect(handAnalyzer.bestHand(pair.fromOneHoleCard.playerCards, pair.fromOneHoleCard.boardCards).hand).not.toBe('quads');

@@ -54,7 +54,7 @@ function MainCtrl() {
   vm.dealToOptions = ['preflop', 'flop', 'turn', 'river'];
   vm.dealTo = 'river';
   vm.usesStartingHandTiers = false;
-  vm.numberOfSimulations = 100000;
+  vm.numberOfSimulations = 10000;
   vm.handPossibilities = [
     'pair',
     'two pair',
@@ -64,6 +64,20 @@ function MainCtrl() {
     'full house',
     'quads',
   ];
+  vm.pairTypes = [
+    'overpair',
+    'top pair',
+    'second pair+',
+    'second pair',
+    'third pair+',
+    'third pair',
+    'fourth pair+',
+    'fourth pair',
+    'fifth pair+',
+    'fifth pair',
+    'underpair',
+  ];
+  vm.evalAgainstAllPairsFromHoleCards = true;
   vm.handsFromHoleCardsToEvalAgainst = {
     pair: true,
     'two pair': false,
@@ -73,6 +87,20 @@ function MainCtrl() {
     'full house': false,
     quads: false,
   };
+  vm.pairsFromHoleCardsToEvalAgainst = {
+    overpair: true,
+    'top pair': true,
+    'second pair+': true,
+    'second pair': true,
+    'third pair+': true,
+    'third pair': true,
+    'fourth pair+': true,
+    'fourth pair': true,
+    'fifth pair+': true,
+    'fifth pair': true,
+    underpair: true,
+  };
+  vm.evalAgainstAllPairs = true;
   vm.handsToEvalAgainst = {
     pair: false,
     'two pair': false,
@@ -81,6 +109,19 @@ function MainCtrl() {
     flush: false,
     'full house': false,
     quads: false,
+  };
+  vm.pairsToEvalAgainst = {
+    overpair: true,
+    'top pair': true,
+    'second pair+': true,
+    'second pair': true,
+    'third pair+': true,
+    'third pair': true,
+    'fourth pair+': true,
+    'fourth pair': true,
+    'fifth pair+': true,
+    'fifth pair': true,
+    underpair: true,
   };
   vm.drawPossibilities = [
     'flushDraw',
@@ -207,12 +248,42 @@ function MainCtrl() {
     }
   };
 
+  vm.togglePairTypesHoleCards = function () {
+    vm.pairsFromHoleCardsToEvalAgainst.overpair = vm.evalAgainstAllPairsFromHoleCards;
+    vm.pairsFromHoleCardsToEvalAgainst['top pair'] = vm.evalAgainstAllPairsFromHoleCards;
+    vm.pairsFromHoleCardsToEvalAgainst['second pair+'] = vm.evalAgainstAllPairsFromHoleCards;
+    vm.pairsFromHoleCardsToEvalAgainst['second pair'] = vm.evalAgainstAllPairsFromHoleCards;
+    vm.pairsFromHoleCardsToEvalAgainst['third pair+'] = vm.evalAgainstAllPairsFromHoleCards;
+    vm.pairsFromHoleCardsToEvalAgainst['third pair'] = vm.evalAgainstAllPairsFromHoleCards;
+    vm.pairsFromHoleCardsToEvalAgainst['fourth pair+'] = vm.evalAgainstAllPairsFromHoleCards;
+    vm.pairsFromHoleCardsToEvalAgainst['fourth pair'] = vm.evalAgainstAllPairsFromHoleCards;
+    vm.pairsFromHoleCardsToEvalAgainst['fifth pair+'] = vm.evalAgainstAllPairsFromHoleCards;
+    vm.pairsFromHoleCardsToEvalAgainst['fifth pair'] = vm.evalAgainstAllPairsFromHoleCards;
+    vm.pairsFromHoleCardsToEvalAgainst.underpair = vm.evalAgainstAllPairsFromHoleCards;
+  };
+
+  vm.togglePairTypes = function () {
+    vm.pairsToEvalAgainst.overpair = vm.evalAgainstAllPairs;
+    vm.pairsToEvalAgainst['top pair'] = vm.evalAgainstAllPairs;
+    vm.pairsToEvalAgainst['second pair+'] = vm.evalAgainstAllPairs;
+    vm.pairsToEvalAgainst['second pair'] = vm.evalAgainstAllPairs;
+    vm.pairsToEvalAgainst['third pair+'] = vm.evalAgainstAllPairs;
+    vm.pairsToEvalAgainst['third pair'] = vm.evalAgainstAllPairs;
+    vm.pairsToEvalAgainst['fourth pair+'] = vm.evalAgainstAllPairs;
+    vm.pairsToEvalAgainst['fourth pair'] = vm.evalAgainstAllPairs;
+    vm.pairsToEvalAgainst['fifth pair+'] = vm.evalAgainstAllPairs;
+    vm.pairsToEvalAgainst['fifth pair'] = vm.evalAgainstAllPairs;
+    vm.pairsToEvalAgainst.underpair = vm.evalAgainstAllPairs;
+  };
+
   vm.runSimulation = function (playersSpec, boardCards, dealTo, usesStartingHandTiers) {
     var players = [];
     var hand;
     var draw;
+    var i;
+    var len;
 
-    for (var i = 0, len = playersSpec.length; i < len; i++) {
+    for (i = 0, len = playersSpec.length; i < len; i++) {
       players.push([]);
     }
 
@@ -227,19 +298,53 @@ function MainCtrl() {
     hand = handAnalyzer.bestHand(players[0], boardCards).hand;
     draw = handAnalyzer.draw(players[0], boardCards);
 
-    for (var handFromHoleCardToEvalAgainst in vm.handsFromHoleCardsToEvalAgainst) {
-      if (vm.handsFromHoleCardsToEvalAgainst.hasOwnProperty(handFromHoleCardToEvalAgainst) && vm.handsFromHoleCardsToEvalAgainst[handFromHoleCardToEvalAgainst]) {
-        if (handAnalyzer.handFromHoleCards(handFromHoleCardToEvalAgainst, players[0], boardCards)) {
-          return true;
+    for (var handFromHoleCardsToEvalAgainst in vm.handsFromHoleCardsToEvalAgainst) {
+      // if we're supposed to compare against it (pair, two pair, trips...)
+      if (vm.handsFromHoleCardsToEvalAgainst.hasOwnProperty(handFromHoleCardsToEvalAgainst) && vm.handsFromHoleCardsToEvalAgainst[handFromHoleCardsToEvalAgainst]) {
+
+        if (handFromHoleCardsToEvalAgainst === 'pair') {
+          if (handAnalyzer.handFromHoleCards('pair', players[0], boardCards)) { // if there's a pair
+            for (var pairType in vm.pairsFromHoleCardsToEvalAgainst) {
+              if (vm.pairsFromHoleCardsToEvalAgainst.hasOwnProperty(pairType) && vm.pairsFromHoleCardsToEvalAgainst[pairType]) { // if we're supposed to compare against it
+                if (handAnalyzer.bestHand(players[0], boardCards).pairType === pairType) {
+                  return true;
+                }
+              }
+            }
+          }
         }
+
+        else if (handFromHoleCardsToEvalAgainst !== 'pair') {
+          if (handAnalyzer.handFromHoleCards(handFromHoleCardsToEvalAgainst, players[0], boardCards)) {
+            return true;
+          }
+        }
+
       }
     }
 
     for (var handToEvalAgainst in vm.handsToEvalAgainst) {
+      // if we're supposed to compare against it (pair, two pair, trips...)
       if (vm.handsToEvalAgainst.hasOwnProperty(handToEvalAgainst) && vm.handsToEvalAgainst[handToEvalAgainst]) {
-        if (hand === handToEvalAgainst) {
-          return true;
+        if (handToEvalAgainst === 'pair') {
+          if (hand === 'pair') {
+            for (var pairType2 in vm.pairsToEvalAgainst) {
+              if (vm.pairsToEvalAgainst.hasOwnProperty(pairType2) && vm.pairsToEvalAgainst[pairType2]) { // if we're supposed to compare against it
+                if (handAnalyzer.bestHand(players[0], boardCards).pairType === pairType2) {
+                  return true;
+                }
+              }
+            }
+          }
         }
+
+
+        else if (handToEvalAgainst !== 'pair') {
+          if (hand === handToEvalAgainst) {
+            return true;
+          }
+        }
+
       }
     }
 
@@ -269,6 +374,7 @@ function MainCtrl() {
 
     vm.setPlayersSpec();
     vm.setBoardCards();
+    vm.determineIfEvalAgainstPair();
 
     for (var i = 0; i < vm.numberOfSimulations; i++) {
       boardCards = angular.copy(vm.boardCards);
@@ -284,6 +390,44 @@ function MainCtrl() {
 
     vm.result = (successes / vm.numberOfSimulations) * 100;
     vm.playersSpec = oldPlayersSpec;
+  };
+
+  vm.determineIfEvalAgainstPair = function () {
+    // from hole cards
+    if (vm.pairsFromHoleCardsToEvalAgainst.overpair ||
+        vm.pairsFromHoleCardsToEvalAgainst['top pair'] ||
+        vm.pairsFromHoleCardsToEvalAgainst['second pair+'] ||
+        vm.pairsFromHoleCardsToEvalAgainst['second pair'] ||
+        vm.pairsFromHoleCardsToEvalAgainst['third pair+'] ||
+        vm.pairsFromHoleCardsToEvalAgainst['third pair'] ||
+        vm.pairsFromHoleCardsToEvalAgainst['fourth pair+'] ||
+        vm.pairsFromHoleCardsToEvalAgainst['fourth pair'] ||
+        vm.pairsFromHoleCardsToEvalAgainst['fifth pair+'] ||
+        vm.pairsFromHoleCardsToEvalAgainst['fifth pair'] ||
+        vm.pairsFromHoleCardsToEvalAgainst.underpair
+    ) {
+      vm.handsFromHoleCardsToEvalAgainst.pair = true;
+    } else {
+      vm.handsFromHoleCardsToEvalAgainst.pair = false;
+    }
+
+    // regular
+    if (vm.pairsToEvalAgainst.overpair ||
+        vm.pairsToEvalAgainst['top pair'] ||
+        vm.pairsToEvalAgainst['second pair+'] ||
+        vm.pairsToEvalAgainst['second pair'] ||
+        vm.pairsToEvalAgainst['third pair+'] ||
+        vm.pairsToEvalAgainst['third pair'] ||
+        vm.pairsToEvalAgainst['fourth pair+'] ||
+        vm.pairsToEvalAgainst['fourth pair'] ||
+        vm.pairsToEvalAgainst['fifth pair+'] ||
+        vm.pairsToEvalAgainst['fifth pair'] ||
+        vm.pairsToEvalAgainst.underpair
+    ) {
+      vm.handsToEvalAgainst.pair = true;
+    } else {
+      vm.handsToEvalAgainst.pair = false;
+    }
   };
 
   function deleteTiers(player) {

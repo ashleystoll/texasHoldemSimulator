@@ -11,6 +11,7 @@ var utilities = (function () {
     areHandsEqual: areHandsEqual,
     getHandString: getHandString,
     getKickers: getKickers,
+    getPairType: getPairType,
   };
 
   var SUITS = ['s', 'c', 'h', 'd'];
@@ -251,6 +252,113 @@ var utilities = (function () {
       return kickers.slice(0, 2);
     } else if (hand === 'nothing') {
       return kickers.slice(0, 5);
+    }
+  }
+
+  function getPairType(rank, boardCards) {
+    var singleBoardCardRanks = [];
+    var boardCardsRankCount = utilities.getRankCount(null, boardCards);
+
+    for (var currRank in boardCardsRankCount) {
+      if (boardCardsRankCount.hasOwnProperty(currRank)) {
+        if (boardCardsRankCount[currRank] === 1) {
+          singleBoardCardRanks.push(currRank);
+        }
+      }
+    }
+
+    singleBoardCardRanks.sort(function (a, b) {
+      return utilities.compareRanks(a, '<', b);
+    });
+
+    if (singleBoardCardRanks.length === 1) {
+      if (utilities.compareRanks(rank, '>', singleBoardCardRanks[0])) {
+        return 'overpair';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[0])) {
+        return 'top pair';
+      } else if (utilities.compareRanks(rank, '<', singleBoardCardRanks[0])) {
+        return 'underpair';
+      }
+    }
+
+    else if (singleBoardCardRanks.length === 2) {
+      if (utilities.compareRanks(rank, '>', singleBoardCardRanks[0])) {
+        return 'overpair';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[0])) {
+        return 'top pair';
+      } else if (utilities.compareRanks(rank, '>', singleBoardCardRanks[1])) {
+        return 'second pair+';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[1])) {
+        return 'second pair';
+      } else if (utilities.compareRanks(rank, '<', singleBoardCardRanks[1])) {
+        return 'underpair';
+      }
+    }
+
+    else if (singleBoardCardRanks.length === 3) {
+      if (utilities.compareRanks(rank, '>', singleBoardCardRanks[0])) {
+        return 'overpair';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[0])) {
+        return 'top pair';
+      } else if (utilities.compareRanks(rank, '>', singleBoardCardRanks[1])) {
+        return 'second pair+';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[1])) {
+        return 'second pair';
+      } else if (utilities.compareRanks(rank, '>', singleBoardCardRanks[2])) {
+        return 'third pair+';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[2])) {
+        return 'third pair';
+      } else if (utilities.compareRanks(rank, '<', singleBoardCardRanks[2])) {
+        return 'underpair';
+      }
+    }
+
+    else if (singleBoardCardRanks.length === 4) {
+      if (utilities.compareRanks(rank, '>', singleBoardCardRanks[0])) {
+        return 'overpair';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[0])) {
+        return 'top pair';
+      } else if (utilities.compareRanks(rank, '>', singleBoardCardRanks[1])) {
+        return 'second pair+';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[1])) {
+        return 'second pair';
+      } else if (utilities.compareRanks(rank, '>', singleBoardCardRanks[2])) {
+        return 'third pair+';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[2])) {
+        return 'third pair';
+      } else if (utilities.compareRanks(rank, '>', singleBoardCardRanks[3])) {
+        return 'fourth pair+';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[3])) {
+        return 'fourth pair';
+      } else if (utilities.compareRanks(rank, '<', singleBoardCardRanks[3])) {
+        return 'underpair';
+      }
+    }
+
+    else if (singleBoardCardRanks.length === 5) {
+      if (utilities.compareRanks(rank, '>', singleBoardCardRanks[0])) {
+        return 'overpair';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[0])) {
+        return 'top pair';
+      } else if (utilities.compareRanks(rank, '>', singleBoardCardRanks[1])) {
+        return 'second pair+';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[1])) {
+        return 'second pair';
+      } else if (utilities.compareRanks(rank, '>', singleBoardCardRanks[2])) {
+        return 'third pair+';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[2])) {
+        return 'third pair';
+      } else if (utilities.compareRanks(rank, '>', singleBoardCardRanks[3])) {
+        return 'fourth pair+';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[3])) {
+        return 'fourth pair';
+      } else if (utilities.compareRanks(rank, '>', singleBoardCardRanks[4])) {
+        return 'fifth pair+';
+      } else if (utilities.compareRanks(rank, '=', singleBoardCardRanks[4])) {
+        return 'fifth pair';
+      } else if (utilities.compareRanks(rank, '<', singleBoardCardRanks[4])) {
+        return 'underpair';
+      }
     }
   }
 
