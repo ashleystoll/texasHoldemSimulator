@@ -10,6 +10,7 @@ var utilities = (function () {
     areCardsEqual: areCardsEqual,
     areHandsEqual: areHandsEqual,
     getHandString: getHandString,
+    getKickers: getKickers,
   };
 
   var SUITS = ['s', 'c', 'h', 'd'];
@@ -90,43 +91,42 @@ var utilities = (function () {
     var suitCount = {
       h: {
         count: 0,
-        highCard: null,
+        ranks: [],
       },
       d: {
         count: 0,
-        highCard: null,
+        ranks: [],
       },
       s: {
         count: 0,
-        highCard: null,
+        ranks: [],
       },
       c: {
         count: 0,
-        highCard: null,
+        ranks: [],
       },
     };
 
     if (boardCards) {
       for (var i = 0, len = boardCards.length; i < len; i++) {
         suitCount[boardCards[i].suit].count++;
-
-        // track the high card for each suit
-        if (compareRanks(boardCards[i].rank, '>', suitCount[boardCards[i].suit].highCard)) {
-          suitCount[boardCards[i].suit].highCard = boardCards[i].rank;
-        }
+        suitCount[boardCards[i].suit].ranks.push(boardCards[i].rank);
       }
     }
 
     if (playerCards) {
       for (var j = 0; j < 2; j++) {
         suitCount[playerCards[j].suit].count++;
-
-        // track the high card for each suit
-        if (compareRanks(playerCards[j].rank, '>', suitCount[playerCards[j].suit].highCard)) {
-          suitCount[playerCards[j].suit].highCard = playerCards[j].rank;
-        }
+        suitCount[playerCards[j].suit].ranks.push(playerCards[j].rank);
       }
+    }
 
+    for (var suit in suitCount) {
+      if (suitCount.hasOwnProperty(suit)) {
+        suitCount[suit].ranks.sort(function (a, b) { // jshint ignore:line
+          return utilities.compareRanks(a, '<', b);
+        });
+      }
     }
 
     return suitCount;
@@ -202,6 +202,55 @@ var utilities = (function () {
       if (card2.rank === '10') {
         card2.rank = 't';
       }
+    }
+  }
+
+  function getKickers(rankCount, hand) {
+    var kickers = [];
+    var twoPairRanks = [];
+    var fullHousePairRanks = [];
+    var fullHouseTripsRanks = [];
+
+    for (var rank in rankCount) {
+      if (rankCount.hasOwnProperty(rank)) {
+        if (rankCount[rank] === 1) {
+          kickers.push(rank);
+        }
+
+        if (hand === 'two pair' && rankCount[rank] === 2) {
+          twoPairRanks.push(rank);
+        }
+
+        if (hand === 'quads' && rankCount[rank] === 2) {
+          kickers.push(rank);
+        }
+
+        if (hand === 'quads' && rankCount[rank] === 3) {
+          kickers.push(rank);
+        }
+      }
+    }
+
+    if (twoPairRanks.length === 3) {
+      twoPairRanks.sort(function (a, b) {
+        return utilities.compareRanks(a, '>', b);
+      });
+
+      kickers.push(twoPairRanks[0]);
+    }
+
+    kickers.sort(function (a, b) {
+      return utilities.compareRanks(a, '<', b);
+    });
+
+    if (hand === 'pair') {
+      return kickers.slice(0, 3);
+    } else if (hand === 'two pair' || hand === 'quads') {
+      return kickers.slice(0, 1);
+    } else if (hand === 'trips') {
+      return kickers.slice(0, 2);
+    } else if (hand === 'nothing') {
+      return kickers.slice(0, 5);
     }
   }
 

@@ -354,19 +354,19 @@ describe('utilities', function () {
       expect(utilities.getSuitCount(playerCards, boardCards)).toEqual({
         h: {
           count: 2,
-          highCard: 'a',
+          ranks: ['a', '5'],
         },
         d: {
           count: 2,
-          highCard: '6',
+          ranks: ['6', '2'],
         },
         s: {
           count: 1,
-          highCard: '4',
+          ranks: ['4'],
         },
         c: {
           count: 2,
-          highCard: '7',
+          ranks: ['7', '3'],
         }
       });
     });
@@ -388,19 +388,19 @@ describe('utilities', function () {
       expect(utilities.getSuitCount(playerCards, boardCards)).toEqual({
         h: {
           count: 3,
-          highCard: 'a',
+          ranks: ['a', '7', '5'],
         },
         d: {
           count: 2,
-          highCard: '6',
+          ranks: ['6', '2'],
         },
         s: {
           count: 1,
-          highCard: '4',
+          ranks: ['4'],
         },
         c: {
           count: 1,
-          highCard: '3',
+          ranks: ['3'],
         }
       });
     });
@@ -422,19 +422,19 @@ describe('utilities', function () {
       expect(utilities.getSuitCount(playerCards, boardCards)).toEqual({
         h: {
           count: 4,
-          highCard: 'a',
+          ranks: ['a', '7', '6', '5'],
         },
         d: {
           count: 1,
-          highCard: '2',
+          ranks: ['2'],
         },
         s: {
           count: 1,
-          highCard: '4',
+          ranks: ['4'],
         },
         c: {
           count: 1,
-          highCard: '3',
+          ranks: ['3'],
         }
       });
     });
@@ -456,19 +456,19 @@ describe('utilities', function () {
       expect(utilities.getSuitCount(playerCards, boardCards)).toEqual({
         h: {
           count: 5,
-          highCard: 'a',
+          ranks: ['a', '7', '6', '5', '4'],
         },
         d: {
           count: 1,
-          highCard: '2',
+          ranks: ['2'],
         },
         s: {
           count: 0,
-          highCard: null,
+          ranks: [],
         },
         c: {
           count: 1,
-          highCard: '3',
+          ranks: ['3'],
         }
       });
     });
@@ -490,19 +490,19 @@ describe('utilities', function () {
       expect(utilities.getSuitCount(playerCards, boardCards)).toEqual({
         h: {
           count: 6,
-          highCard: 'a',
+          ranks: ['a', '7', '6', '5', '4', '3'],
         },
         d: {
           count: 1,
-          highCard: '2',
+          ranks: ['2'],
         },
         s: {
           count: 0,
-          highCard: null,
+          ranks: [],
         },
         c: {
           count: 0,
-          highCard: null,
+          ranks: [],
         }
       });
     });
@@ -524,19 +524,19 @@ describe('utilities', function () {
       expect(utilities.getSuitCount(playerCards, boardCards)).toEqual({
         h: {
           count: 7,
-          highCard: 'a',
+          ranks: ['a', '7', '6', '5', '4', '3', '2'],
         },
         d: {
           count: 0,
-          highCard: null,
+          ranks: [],
         },
         s: {
           count: 0,
-          highCard: null,
+          ranks: [],
         },
         c: {
           count: 0,
-          highCard: null,
+          ranks: [],
         }
       });
     });
@@ -693,6 +693,148 @@ describe('utilities', function () {
         new Card('6', 's'),
         new Card('7', 'c'),
       ])).toBe('76o');
+    });
+  });
+
+  describe('getKickers', function () {
+    it('nothing', function () {
+      var playerCards = [
+        new Card('a', 'h'),
+        new Card('2', 'd'),
+      ];
+      var boardCards = [
+        new Card('7', 'c'),
+        new Card('4', 's'),
+        new Card('k', 'd'),
+        new Card('q', 'h'),
+        new Card('8', 'd'),
+      ];
+      var rankCount = utilities.getRankCount(playerCards, boardCards);
+
+      expect(utilities.getKickers(rankCount, 'nothing')).toEqual(['a', 'k', 'q', '8', '7']);
+    });
+
+    it('pair', function () {
+      var playerCards = [
+        new Card('a', 'h'),
+        new Card('a', 'd'),
+      ];
+      var boardCards = [
+        new Card('2', 'c'),
+        new Card('4', 's'),
+        new Card('k', 'd'),
+        new Card('q', 'h'),
+        new Card('8', 'd'),
+      ];
+      var rankCount = utilities.getRankCount(playerCards, boardCards);
+
+      expect(utilities.getKickers(rankCount, 'pair')).toEqual(['k', 'q', '8']);
+    });
+
+    describe('two pair', function () {
+      it('two pairs, three kickers', function () {
+        var playerCards = [
+          new Card('a', 'h'),
+          new Card('2', 'd'),
+        ];
+        var boardCards = [
+          new Card('a', 'c'),
+          new Card('4', 's'),
+          new Card('k', 'd'),
+          new Card('2', 'h'),
+          new Card('8', 'd'),
+        ];
+        var rankCount = utilities.getRankCount(playerCards, boardCards);
+
+        expect(utilities.getKickers(rankCount, 'two pair')).toEqual(['k']);
+      });
+
+      it('three pairs, one kicker', function () {
+        var playerCards = [
+          new Card('a', 'h'),
+          new Card('a', 'd'),
+        ];
+        var boardCards = [
+          new Card('7', 'c'),
+          new Card('7', 's'),
+          new Card('k', 'd'),
+          new Card('k', 'h'),
+          new Card('8', 'd'),
+        ];
+        var rankCount = utilities.getRankCount(playerCards, boardCards);
+
+        expect(utilities.getKickers(rankCount, 'two pair')).toEqual(['8']);
+      });
+    });
+
+    it('trips', function () {
+      var playerCards = [
+        new Card('a', 'h'),
+        new Card('a', 'd'),
+      ];
+      var boardCards = [
+        new Card('a', 'c'),
+        new Card('4', 's'),
+        new Card('k', 'd'),
+        new Card('q', 'h'),
+        new Card('8', 'd'),
+      ];
+      var rankCount = utilities.getRankCount(playerCards, boardCards);
+
+      expect(utilities.getKickers(rankCount, 'trips')).toEqual(['k', 'q']);
+    });
+
+    describe('quads', function () {
+      it('three kickers', function () {
+        var playerCards = [
+          new Card('a', 'h'),
+          new Card('a', 'd'),
+        ];
+        var boardCards = [
+          new Card('a', 'c'),
+          new Card('a', 's'),
+          new Card('2', 'd'),
+          new Card('6', 'd'),
+          new Card('k', 'c'),
+        ];
+        var rankCount = utilities.getRankCount(playerCards, boardCards);
+
+        expect(utilities.getKickers(rankCount, 'quads')).toEqual(['k']);
+      });
+
+      it('four two', function () {
+        var playerCards = [
+          new Card('a', 'h'),
+          new Card('a', 'd'),
+        ];
+        var boardCards = [
+          new Card('a', 'c'),
+          new Card('a', 's'),
+          new Card('2', 's'),
+          new Card('2', 'd'),
+          new Card('k', 'c'),
+        ];
+        var rankCount = utilities.getRankCount(playerCards, boardCards);
+
+        expect(utilities.getKickers(rankCount, 'quads')).toEqual(['k']);
+      });
+
+      it('four three', function () {
+        var playerCards = [
+          new Card('a', 'h'),
+          new Card('a', 'd'),
+        ];
+        var boardCards = [
+          new Card('a', 'c'),
+          new Card('a', 's'),
+          new Card('2', 'd'),
+          new Card('2', 's'),
+          new Card('2', 'c'),
+        ];
+        var rankCount = utilities.getRankCount(playerCards, boardCards);
+
+        expect(utilities.getKickers(rankCount, 'quads')).toEqual(['2']);
+      });
     });
   });
 });

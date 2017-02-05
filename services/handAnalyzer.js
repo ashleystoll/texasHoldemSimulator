@@ -72,7 +72,7 @@ var handAnalyzer = (function () {
       return pair;
     }
 
-    return _highCard(playerCards, boardCards);
+    return _nothing(playerCards, boardCards);
   }
 
   function _royalFlush(playerCards, boardCards) {
@@ -169,6 +169,7 @@ var handAnalyzer = (function () {
             hand: 'quads',
             handRank: 7,
             rank: rank,
+            kickers: utilities.getKickers(rankCount, 'quads'),
           };
         }
       }
@@ -224,6 +225,7 @@ var handAnalyzer = (function () {
 
   function _flush(playerCards, boardCards) {
     var suitCount = utilities.getSuitCount(playerCards, boardCards);
+    var ranks;
 
     for (var suit in suitCount) {
       if (suitCount.hasOwnProperty(suit)) {
@@ -232,7 +234,7 @@ var handAnalyzer = (function () {
             hand: 'flush',
             handRank: 5,
             suit: suit,
-            highCard: suitCount[suit].highCard,
+            ranks: suitCount[suit].ranks.slice(0, 5),
           };
         }
       }
@@ -401,6 +403,7 @@ var handAnalyzer = (function () {
         hand: 'trips',
         handRank: 3,
         rank: tripsRank,
+        kickers: utilities.getKickers(rankCount, 'trips'),
       };
     }
 
@@ -458,6 +461,7 @@ var handAnalyzer = (function () {
         handRank: 2,
         high: twoPairCards.high,
         low: twoPairCards.low,
+        kickers: utilities.getKickers(rankCount, 'two pair'),
       };
     }
 
@@ -472,6 +476,7 @@ var handAnalyzer = (function () {
             hand: 'pair',
             handRank: 1,
             rank: rank,
+            kickers: utilities.getKickers(rankCount, 'pair'),
           };
         }
       }
@@ -480,11 +485,11 @@ var handAnalyzer = (function () {
     return false;
   }
 
-  function _highCard() {
+  function _nothing() {
     return {
       hand: 'high card',
       handRank: 0,
-      // todo get high card
+      kickers: utilities.getKickers(rankCount, 'nothing'),
     };
   }
 

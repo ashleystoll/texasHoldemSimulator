@@ -757,18 +757,21 @@ describe('handAnalyzer', function () {
             hand: 'pair',
             handRank: 1,
             rank: 'a',
+            kickers: ['k', 'q', '8'],
           });
 
           expect(handAnalyzer.bestHand(pair.fromOneHoleCard.playerCards, pair.fromOneHoleCard.boardCards)).toEqual({
             hand: 'pair',
             handRank: 1,
             rank: 'a',
+            kickers: ['k', 'q', '8'],
           });
 
           expect(handAnalyzer.bestHand(pair.fromBoard.playerCards, pair.fromBoard.boardCards)).toEqual({
             hand: 'pair',
             handRank: 1,
             rank: '7',
+            kickers: ['a', 'k', 'q'],
           });
         });
 
@@ -838,24 +841,28 @@ describe('handAnalyzer', function () {
             handRank: 2,
             high: 'a',
             low: '2',
+            kickers: ['k'],
           });
           expect(handAnalyzer.bestHand(twoPair.fromOneHoleCard.playerCards, twoPair.fromOneHoleCard.boardCards)).toEqual({
             hand: 'two pair',
             handRank: 2,
             high: 'a',
             low: '2',
+            kickers: ['q'],
           });
           expect(handAnalyzer.bestHand(twoPair.fromBoard.playerCards, twoPair.fromBoard.boardCards)).toEqual({
             hand: 'two pair',
             handRank: 2,
             high: 'k',
             low: '7',
+            kickers: ['a'],
           });
           expect(handAnalyzer.bestHand(twoPair.threePairs.playerCards, twoPair.threePairs.boardCards)).toEqual({
             hand: 'two pair',
             handRank: 2,
             high: 'a',
             low: 'k',
+            kickers: ['8'],
           });
         });
 
@@ -921,16 +928,19 @@ describe('handAnalyzer', function () {
             hand: 'trips',
             handRank: 3,
             rank: 'a',
+            kickers: ['k', 'q'],
           });
           expect(handAnalyzer.bestHand(trips.fromOneHoleCard.playerCards, trips.fromOneHoleCard.boardCards)).toEqual({
             hand: 'trips',
             handRank: 3,
             rank: 'a',
+            kickers: ['k', 'q'],
           });
           expect(handAnalyzer.bestHand(trips.fromBoard.playerCards, trips.fromBoard.boardCards)).toEqual({
             hand: 'trips',
             handRank: 3,
             rank: '7',
+            kickers: ['a', 'q'],
           });
         });
 
@@ -1082,8 +1092,16 @@ describe('handAnalyzer', function () {
             handRank: 4,
             highCard: '5',
           });
-          expect(handAnalyzer.bestHand(twoPair.andStraight.playerCards, twoPair.andStraight.boardCards).hand).toBe('straight');
-          expect(handAnalyzer.bestHand(trips.andStraight.playerCards, trips.andStraight.boardCards).hand).toBe('straight');
+          expect(handAnalyzer.bestHand(twoPair.andStraight.playerCards, twoPair.andStraight.boardCards)).toEqual({
+            hand: 'straight',
+            handRank: 4,
+            highCard: '5',
+          });
+          expect(handAnalyzer.bestHand(trips.andStraight.playerCards, trips.andStraight.boardCards)).toEqual({
+            hand: 'straight',
+            handRank: 4,
+            highCard: '10',
+          });
         });
 
         it('don\'t got it', function () {
@@ -1142,45 +1160,50 @@ describe('handAnalyzer', function () {
             hand: 'flush',
             handRank: 5,
             suit: 'h',
-            highCard: 'a',
+            ranks: ['a', 'k', 'q', '4', '2'],
           });
           expect(handAnalyzer.bestHand(flush.fromOneHoleCard.playerCards, flush.fromOneHoleCard.boardCards)).toEqual({
             hand: 'flush',
             handRank: 5,
             suit: 'h',
-            highCard: 'a',
+            ranks: ['a', 'k', 'q', '7', '4'],
           });
           expect(handAnalyzer.bestHand(flush.fromBoard.playerCards, flush.fromBoard.boardCards)).toEqual({
             hand: 'flush',
             handRank: 5,
             suit: 'c',
-            highCard: 'k',
+            ranks: ['k', 'q', '8', '7', '4'],
           });
           expect(handAnalyzer.bestHand(flush.withSix.playerCards, flush.withSix.boardCards)).toEqual({
             hand: 'flush',
             handRank: 5,
             suit: 'c',
-            highCard: 'k',
+            ranks: ['k', 'q', '8', '7', '4'],
           });
           expect(handAnalyzer.bestHand(flush.withSeven.playerCards, flush.withSeven.boardCards)).toEqual({
             hand: 'flush',
             handRank: 5,
             suit: 'c',
-            highCard: 'a',
+            ranks: ['a', 'k', 'q', '8', '7'],
           });
           expect(handAnalyzer.bestHand(pair.andFlush.playerCards, pair.andFlush.boardCards)).toEqual({
             hand: 'flush',
             handRank: 5,
             suit: 'c',
-            highCard: 'k',
+            ranks: ['k', '10', '6', '3', '2'],
           });
           expect(handAnalyzer.bestHand(twoPair.andFlush.playerCards, twoPair.andFlush.boardCards)).toEqual({
             hand: 'flush',
             handRank: 5,
             suit: 'h',
-            highCard: 'a',
+            ranks: ['a', 'k', '9', '6', '2'],
           });
-          expect(handAnalyzer.bestHand(trips.andFlush.playerCards, trips.andFlush.boardCards).hand).toBe('flush');
+          expect(handAnalyzer.bestHand(trips.andFlush.playerCards, trips.andFlush.boardCards)).toEqual({
+            hand: 'flush',
+            handRank: 5,
+            suit: 'h',
+            ranks: ['a', 'q', '8', '7', '2'],
+          });
         });
 
         it('don\'t got it', function () {
@@ -1353,21 +1376,25 @@ describe('handAnalyzer', function () {
             hand: 'quads',
             handRank: 7,
             rank: 'a',
+            kickers: ['k'],
           });
           expect(handAnalyzer.bestHand(quads.fromOneHoleCard.playerCards, quads.fromOneHoleCard.boardCards)).toEqual({
             hand: 'quads',
             handRank: 7,
             rank: 'a',
+            kickers: ['k'],
           });
           expect(handAnalyzer.bestHand(quads.fromBoard.playerCards, quads.fromBoard.boardCards)).toEqual({
             hand: 'quads',
             handRank: 7,
             rank: '2',
+            kickers: ['a'],
           });
           expect(handAnalyzer.bestHand(fullHouse.andQuads.playerCards, fullHouse.andQuads.boardCards)).toEqual({
             hand: 'quads',
             handRank: 7,
             rank: '2',
+            kickers: ['a'],
           });
         });
 
