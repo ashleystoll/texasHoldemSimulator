@@ -459,3 +459,7 @@ function MainCtrl() {
     delete player.card2;
   }
 }
+
+$(function () {
+  $('[data-toggle="popover"]').popover();
+});

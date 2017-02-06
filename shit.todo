@@ -8,6 +8,7 @@
 ✔ handAnalyzer for handFromHoleCards @done(2017-02-03 15:45)
 ✔ get kickers, update unit tests @done(2017-02-04 17:24)
 ✔ middle/bottom pair @done(2017-02-05 14:45)
+☐ ui improvements
 ☐ two overcards
 ☐ pair with kicker
 ☐ display distribution of all results (pair, two pair...)

@@ -2,8 +2,10 @@
 <html ng-app="texasHoldemSimulator">
   <head>
     <title>Texas Hold'em Simulator</title>
-    <link rel="stylesheet" href="lib/bootstrap.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="icon" href="data:;base64,iVBORw0KGgo="> <!-- prevents favicon request -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="lib/angular.js"></script>
     <script src="lib/lodash.js"></script>
     <script src="services/card.js"></script>
@@ -165,6 +167,10 @@
         <hr />
 
         <!-- <pre>{{ vm.boardCards | json }}</pre> -->
+
+        <p>
+          <small>You can preset the first three board cards to be 6h7h8h and then simulate to the river, for example.</small>
+        </p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -329,6 +335,22 @@
           </label>
         </div>
 
+        <div>
+          <strong>Result:</strong> {{ vm.result | number:3 }}<span ng-show="vm.result">%</span>
+        </div>
+
+        <br>
+
+        <div>
+          <button class="btn btn-default" ng-click="vm.runSimulations()">Run Simulations</button>
+        </div>
+
+        <hr>
+
+        <p>
+          <small>What percentage of the time do you have one of these hands OR draws.</small>
+        </p>
+
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">Hands to eval against:</h3>
@@ -340,12 +362,18 @@
                 From hole cards:
                 <input type="checkbox" ng-model="vm.fromHoleCards">
               </label>
+              <span
+                class="glyphicon glyphicon-question-sign"
+                data-toggle="popover"
+                data-placement="right"
+                data-content="The following isn't a pair you made with your hole cards: Hole cards: t9, Board: 344kj"
+                style="cursor: pointer;"
+              ></span>
             </div>
 
             <hr>
 
             <div ng-show="vm.fromHoleCards">
-              from hole cards
               <div ng-repeat="handToEvalAgainst in vm.handPossibilities">
                 <label ng-if="handToEvalAgainst !== 'pair'">
                   {{ handToEvalAgainst }}
@@ -359,8 +387,8 @@
                   </small>
                 </label>
 
-                <ul ng-repeat="pairType in vm.pairTypes" ng-if="handToEvalAgainst === 'pair'">
-                  <li>
+                <ul ng-if="handToEvalAgainst === 'pair'">
+                  <li ng-repeat="pairType in vm.pairTypes">
                     <label>
                       {{ pairType }}
                       <input type="checkbox" ng-model="vm.pairsFromHoleCardsToEvalAgainst[pairType]">
@@ -371,7 +399,6 @@
             </div>
 
             <div ng-show="!vm.fromHoleCards">
-              not from hole cards
               <div ng-repeat="handToEvalAgainst in vm.handPossibilities">
                 <label ng-if="handToEvalAgainst !== 'pair'">
                   {{ handToEvalAgainst }}
@@ -385,8 +412,8 @@
                   </small>
                 </label>
 
-                <ul ng-repeat="pairType in vm.pairTypes" ng-if="handToEvalAgainst === 'pair'">
-                  <li>
+                <ul ng-if="handToEvalAgainst === 'pair'">
+                  <li ng-repeat="pairType in vm.pairTypes">
                     <label>
                       {{ pairType }}
                       <input type="checkbox" ng-model="vm.pairsToEvalAgainst[pairType]">
@@ -411,16 +438,6 @@
               </label>
             </div>
           </div>
-        </div>
-
-        <div>
-          <button class="btn btn-default" ng-click="vm.runSimulations()">Run Simulations</button>
-        </div>
-
-        <hr />
-
-        <div>
-          <strong>Result:</strong> {{ vm.result | number:3 }}<span ng-show="vm.result">%</span>
         </div>
       </div>
     </div>
