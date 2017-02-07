@@ -17,6 +17,15 @@
     <script src="app.js"></script>
   </head>
   <body>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <ul class="nav navbar-nav">
+          <li><a href="https://adamzerner.github.io/texasHoldemSimulator/"><span class="glyphicon glyphicon-home"></span></a></li>
+          <li><a href="https://adamzerner.github.io/texasHoldemSimulator/help.html">Help</a></li>
+        </ul>
+      </div>
+    </nav>
+
     <div class="container" ng-controller="MainCtrl as vm">
       <div class="page-header">
         <h1>Texas Hold'em Simulator</h1>
@@ -24,9 +33,11 @@
 
 
       <span class="thumbnail">
-        <img src="assets/startingHands.jpg">
+        <img width="600" src="assets/startingHands.jpg">
       </span>
-      <p>source: <a href="https://en.wikipedia.org/wiki/Texas_hold_'em_starting_hands#Sklansky_hand_groups">https://en.wikipedia.org/wiki/Texas_hold_'em_starting_hands#Sklansky_hand_groups</a></p>
+      <p>
+        <small>source: <a href="https://en.wikipedia.org/wiki/Texas_hold_'em_starting_hands#Sklansky_hand_groups">https://en.wikipedia.org/wiki/Texas_hold_'em_starting_hands#Sklansky_hand_groups</a></small>
+      </p>
 
       <div class="col-md-3">
         <h2>Players:</h2>
